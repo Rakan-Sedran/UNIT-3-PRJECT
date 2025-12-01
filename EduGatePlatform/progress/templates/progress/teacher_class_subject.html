@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ classsubject.school_class.name }} - {{ classsubject.subject.name }}</h1>
+
+<h2>Lessons</h2>
+<ul>
+  {% for lesson in lessons %}
+    <li>{{ lesson.title }} - {{ lesson.created_at }}</li>
+  {% empty %}
+    <li>No lessons yet.</li>
+  {% endfor %}
+</ul>
+
+<h2>Homeworks</h2>
+<ul>
+  {% for hw in homeworks %}
+    <li>{{ hw.title }} - due: {{ hw.due_date }}</li>
+  {% empty %}
+    <li>No homeworks yet.</li>
+  {% endfor %}
+</ul>
+
+<h2>Quizzes</h2>
+<ul>
+  {% for quiz in quizzes %}
+    <li>{{ quiz.title }} - Marks: {{ quiz.total_marks }}</li>
+  {% empty %}
+    <li>No quizzes yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
