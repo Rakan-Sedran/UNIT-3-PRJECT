@@ -9,10 +9,11 @@
     <header>
         <nav class="navbar">
             <div class="logo">EduGate</div>
-            <ul class="nav-links">
-                <li><a href="{% url 'main:home' %}">Home</a></li>
-                <!-- بنزبطها بعدين يا يامي: About, Contact, Login -->
-            </ul>
+<ul class="nav-links">
+    <li><a href="{% url 'main:home' %}">Home</a></li>
+    <li><a href="{% url 'accounts:login' %}">Login</a></li>
+    <li><a href="{% url 'accounts:register' %}">Register</a></li>
+</ul>
         </nav>
     </header>
 

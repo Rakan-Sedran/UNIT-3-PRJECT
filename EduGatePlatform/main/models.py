@@ -1,5 +1,7 @@
 from django.db import models
 
+# Create your models here.
+
 class Announcement(models.Model):
     CATEGORY_CHOICES = [
         ('trip', 'Trip'),
