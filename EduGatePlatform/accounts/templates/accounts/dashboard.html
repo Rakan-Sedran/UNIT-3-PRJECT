@@ -2,10 +2,56 @@
 
 {% block content %}
   <h1>Dashboard</h1>
+
   {% if profile %}
     <p>Welcome, {{ profile.full_name }} ({{ profile.get_role_display }})</p>
     <p>National ID: {{ profile.national_id }}</p>
   {% else %}
     <p>No profile data found.</p>
+  {% endif %}
+
+  <hr>
+
+  {% if role == "admin" %}
+    <h2>Admin Panel (simple view)</h2>
+    <p>You can manage classes, subjects, teachers and students in the admin site.</p>
+    <p><a href="/admin/">Go to Django Admin</a></p>
+
+  {% elif role == "teacher" %}
+    <h2>Your Classes & Subjects</h2>
+    {% if teacher_classes %}
+      <ul>
+        {% for cs in teacher_classes %}
+          <li>
+            {{ cs.school_class.name }} - {{ cs.subject.name }} ({{ cs.academic_year }})
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No classes assigned yet.</p>
+    {% endif %}
+
+  {% elif role == "student" %}
+    <h2>Your Class</h2>
+    {% if student_enrollment %}
+      <p>You are in class: {{ student_enrollment.school_class.name }} ({{ student_enrollment.academic_year }})</p>
+    {% else %}
+      <p>You are not assigned to a class yet.</p>
+    {% endif %}
+
+  {% elif role == "parent" %}
+    <h2>Your Children</h2>
+    {% if parent_children %}
+      <ul>
+        {% for rel in parent_children %}
+          <li>{{ rel.student.profile.full_name }} ({{ rel.student.username }})</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No children linked to your account yet.</p>
+    {% endif %}
+
+  {% else %}
+    <p>Role is not set. Please contact admin.</p>
   {% endif %}
 {% endblock %}
