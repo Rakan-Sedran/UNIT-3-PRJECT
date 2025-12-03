@@ -13,24 +13,30 @@ from progress.models import HomeworkSubmission, QuizSubmission
 # Create your views here.
 
 
+@login_required
 def register(request):
+    profile = getattr(request.user, "profile", None)
+
+    if not (request.user.is_superuser or (profile and profile.role == "admin")):
+        return HttpResponseForbidden("Only administrators can create new accounts.")
+
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             password = form.cleaned_data['password']
-            user.set_password(password) 
+            user.set_password(password)
             user.save()
 
             Profile.objects.create(
                 user=user,
                 full_name=form.cleaned_data['full_name'],
                 national_id=form.cleaned_data['national_id'],
-                role=form.cleaned_data['role']
+                role=form.cleaned_data['role']  
             )
 
-            messages.success(request, "Account created successfully. You can now log in.")
-            return redirect('accounts:login')
+            messages.success(request, "Account created successfully.")
+            return redirect('accounts:dashboard')
     else:
         form = UserRegisterForm()
 
