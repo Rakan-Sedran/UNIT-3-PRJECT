@@ -68,9 +68,13 @@ def dashboard(request):
     profile = getattr(request.user, 'profile', None)
     role = profile.role if profile else 'unknown'
 
+    is_admin = request.user.is_superuser or (profile and profile.role == 'admin')
+
     teacher_classes = []
     student_enrollment = None
     parent_children = []
+    pending_homeworks = None
+    pending_quizzes = None
 
     if role == 'teacher':
         teacher_classes = ClassSubject.objects.filter(teacher=request.user)
@@ -80,17 +84,41 @@ def dashboard(request):
             student=request.user
         ).first()
 
+        if student_enrollment:
+            classsubjects = ClassSubject.objects.filter(
+                school_class=student_enrollment.school_class
+            )
+
+            pending_homeworks = Homework.objects.filter(
+                class_subject__in=classsubjects
+            ).exclude(
+                submissions__student=request.user
+            ).count()
+
+            pending_quizzes = Quiz.objects.filter(
+                class_subject__in=classsubjects
+            ).exclude(
+                submissions__student=request.user
+            ).count()
+        else:
+            pending_homeworks = 0
+            pending_quizzes = 0
+
     elif role == 'parent':
         parent_children = ParentStudentRelation.objects.filter(parent=request.user)
 
     context = {
         'profile': profile,
         'role': role,
+        'is_admin': is_admin,
         'teacher_classes': teacher_classes,
         'student_enrollment': student_enrollment,
         'parent_children': parent_children,
+        'pending_homeworks': pending_homeworks,
+        'pending_quizzes': pending_quizzes,
     }
     return render(request, 'accounts/dashboard.html', context)
+
 
 @login_required
 def student_subjects(request):
