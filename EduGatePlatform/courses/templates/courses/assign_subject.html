@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-3">Assign Subject to Class</h1>
+
+<form method="post" class="card card-body">
+  {% csrf_token %}
+  <div class="mb-3">
+    {{ form.school_class.label_tag }}
+    {{ form.school_class }}
+  </div>
+  <div class="mb-3">
+    {{ form.subject.label_tag }}
+    {{ form.subject }}
+  </div>
+  <div class="mb-3">
+    {{ form.teacher.label_tag }}
+    {{ form.teacher }}
+  </div>
+  <div class="mb-3">
+    {{ form.academic_year.label_tag }}
+    {{ form.academic_year }}
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>
+{% endblock %}

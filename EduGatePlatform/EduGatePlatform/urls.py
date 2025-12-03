@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include(('main.urls', 'main'), namespace='main')),
     path('accounts/', include(('accounts.urls', 'accounts'), namespace='accounts')),
     path('progress/', include(('progress.urls', 'progress'), namespace='progress')),
+    path('courses/', include(('courses.urls', 'courses'), namespace='courses')),
 ]
 
 if settings.DEBUG:

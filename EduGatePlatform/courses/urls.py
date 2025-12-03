@@ -1,0 +1,9 @@
+from django.urls import path
+from . import views
+
+app_name = "courses"
+
+urlpatterns = [
+    path("assign-subject/", views.assign_subject_to_class, name="assign_subject"),
+    path("enroll-student/", views.enroll_student_in_class, name="enroll_student"),
+]
