@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from accounts.models import Profile
-from .forms import ClassSubjectForm, StudentMultiEnrollmentForm
 from .models import StudentClassEnrollment
+from .forms import ClassSubjectForm, StudentMultiEnrollmentForm
+
+# Create your views here.
 
 
 @login_required
@@ -47,4 +48,5 @@ def enroll_students_in_class(request):
     else:
         form = StudentMultiEnrollmentForm()
 
-    return render(request, "courses/enroll_students.html", {"form": form})
+    return render(request, "courses/enroll_student.html", {"form": form})
+
