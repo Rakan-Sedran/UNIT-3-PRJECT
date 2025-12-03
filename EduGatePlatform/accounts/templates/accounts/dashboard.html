@@ -12,16 +12,35 @@
   </div>
 {% endif %}
 
-{% if role == "admin" %}
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Admin Panel</h5>
-      <p class="card-text">You can manage classes, subjects, teachers and students.</p>
-      <a href="/admin/" class="btn btn-outline-primary">Open Django Admin</a>
-    </div>
+{% if is_admin %}
+<div class="card mb-4">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">Administrative Tools</h5>
   </div>
+  <div class="card-body">
 
-{% elif role == "teacher" %}
+    <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary mb-2 w-100">
+      ➕ Add User (Teacher / Student / Parent)
+    </a>
+
+    <a href="{% url 'main:create_class' %}" class="btn btn-outline-secondary mb-2 w-100">
+      🏫 Create School Class
+    </a>
+
+    <a href="{% url 'main:add_announcement' %}" class="btn btn-outline-info mb-2 w-100">
+      📢 Add Announcement
+    </a>
+
+    <a href="/admin/" class="btn btn-dark w-100">
+      🔧 Open Django Admin
+    </a>
+
+  </div>
+</div>
+{% endif %}
+
+
+{% if role == "teacher" %}
   <h4>Your Classes & Subjects</h4>
   {% if teacher_classes %}
     <div class="row">

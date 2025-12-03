@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-3">Create School Class</h1>
+
+<form method="post" class="card card-body">
+  {% csrf_token %}
+  <div class="mb-3">
+    {{ form.name.label_tag }}
+    {{ form.name }}
+  </div>
+  <div class="mb-3">
+    {{ form.grade_level.label_tag }}
+    {{ form.grade_level }}
+  </div>
+  <button type="submit" class="btn btn-primary w-100">Save class</button>
+</form>
+{% endblock %}
