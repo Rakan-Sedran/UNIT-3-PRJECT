@@ -164,7 +164,6 @@ def quiz_submit(request, quiz_id):
 
 @login_required
 def homework_submissions(request, homework_id):
-
     hw = get_object_or_404(Homework, id=homework_id)
 
     if hw.class_subject.teacher != request.user:
