@@ -243,11 +243,34 @@ def student_subject_detail(request, classsubject_id):
     homeworks = Homework.objects.filter(class_subject=classsubject)
     quizzes = Quiz.objects.filter(class_subject=classsubject)
 
+    attempts = QuizAttempt.objects.filter(
+        student=request.user,
+        quiz__in=quizzes
+    ).order_by('quiz', '-started_at')
+
+    quiz_data = []
+    used_quiz_ids = set()
+
+    for att in attempts:
+        if att.quiz_id not in used_quiz_ids:
+            used_quiz_ids.add(att.quiz_id)
+            quiz_data.append({
+                "quiz": att.quiz,
+                "latest_attempt": att,
+            })
+
+    for quiz in quizzes:
+        if quiz.id not in used_quiz_ids:
+            quiz_data.append({
+                "quiz": quiz,
+                "latest_attempt": None,
+            })
+
     return render(request, "progress/student_subject_detail.html", {
         "classsubject": classsubject,
         "lessons": lessons,
         "homeworks": homeworks,
-        "quizzes": quizzes,
+        "quiz_data": quiz_data,   
     })
 
 
