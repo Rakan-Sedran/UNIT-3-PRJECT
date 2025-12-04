@@ -1,99 +1,142 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1 class="mb-3">Dashboard</h1>
+<h1 class="mb-3"><i class="fas fa-chart-line me-2"></i> Dashboard</h1>
 
 {% if profile %}
-  <div class="mb-4">
-    <h5>Hello, {{ profile.full_name }} 👋</h5>
-    <p class="text-muted">
-      Role: {{ profile.get_role_display }} | National ID: {{ profile.national_id }}
-    </p>
+  <div class="card mb-4 bg-light shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title">Hello, {{ profile.full_name }} 👋</h4>
+      <p class="card-text text-muted">
+        Your Role: <span class="badge bg-info fs-6">{{ profile.get_role_display }}</span> | National ID: **{{ profile.national_id }}**
+      </p>
+    </div>
   </div>
 {% endif %}
 
 {% if is_admin %}
-<div class="card mb-4">
-  <div class="card-header bg-primary text-white">
-    <h5 class="mb-0">Administrative Tools</h5>
-  </div>
-  <div class="card-body">
+    <div class="card mb-5 shadow-lg">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fas fa-tools me-2"></i> Administrative Tools</h5>
+      </div>
+      <div class="card-body p-4">
 
-    <h6 class="mb-3">User & Relations Management</h6>
-    <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary mb-2 w-100">
-      ➕ Add User (Teacher / Student / Parent)
-    </a>
-    <a href="{% url 'accounts:link_parent_children' %}" class="btn btn-outline-info mb-2 w-100">
-      🔗 Link Parent to Children
-    </a>
-    
-    <hr>
+        <h6 class="mb-3 text-primary"><i class="fas fa-users-cog me-2"></i> User & Relations Management</h6>
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary w-100">
+                    ➕ Add New User
+                </a>
+            </div>
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'accounts:link_parent_children' %}" class="btn btn-outline-info w-100">
+                    🔗 Link Parent to Children
+                </a>
+            </div>
+        </div>
+        
+        <hr class="my-4">
 
-    <h6 class="mb-3">Courses & Classes Management</h6>
-    <a href="{% url 'main:schoolclass_list' %}" class="btn btn-outline-secondary mb-2 w-100">
-      🏫 Manage School Classes (Edit/Delete)
-    </a>
-    <a href="{% url 'courses:subject_list' %}" class="btn btn-outline-secondary mb-2 w-100">
-      📚 Manage Subjects (Edit/Delete)
-    </a>
-    <a href="{% url 'courses:assign_subject' %}" class="btn btn-outline-warning mb-2 w-100">
-      📘 Assign Subject to Class & Teacher
-    </a>
-    <a href="{% url 'courses:enroll_student' %}" class="btn btn-outline-warning mb-2 w-100">
-      👥 Enroll Students in Class
-    </a>
+        <h6 class="mb-3 text-success"><i class="fas fa-book-reader me-2"></i> Courses & Classes Management</h6>
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'main:schoolclass_list' %}" class="btn btn-outline-secondary w-100">
+                    🏫 Manage School Classes
+                </a>
+            </div>
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'courses:subject_list' %}" class="btn btn-outline-secondary w-100">
+                    📚 Manage Subjects
+                </a>
+            </div>
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'courses:assign_subject' %}" class="btn btn-outline-warning w-100">
+                    📘 Assign Subject to Class & Teacher
+                </a>
+            </div>
+            <div class="col-md-6 mb-2">
+                <a href="{% url 'courses:enroll_student' %}" class="btn btn-outline-warning w-100">
+                    👥 Enroll Students in Class
+                </a>
+            </div>
+        </div>
 
-    <hr>
-    
-    <h6 class="mb-3">Platform Management</h6>
-    <a href="{% url 'main:add_announcement' %}" class="btn btn-outline-success mb-2 w-100">
-      📢 Add School Announcement
-    </a>
+        <hr class="my-4">
+        
+        <h6 class="mb-3 text-danger"><i class="fas fa-bullhorn me-2"></i> Platform Management</h6>
+        <a href="{% url 'main:add_announcement' %}" class="btn btn-outline-success w-100">
+            📢 Add School Announcement
+        </a>
+      </div>
     </div>
-</div>
-{% endif %}
 
-{% if role == "teacher" %}
-  <h4>Your Assigned Classes</h4>
-  {% if class_subjects %}
-    <div class="row">
-      {% for cs in class_subjects %}
-        <div class="col-md-4 mb-3">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">{{ cs.school_class.name }}</h5>
-              <p class="card-text">{{ cs.subject.name }} ({{ cs.academic_year }})</p>
-              <a href="{% url 'progress:teacher_class_subject' cs.id %}" class="btn btn-sm btn-primary">
-                Manage lessons & homework
-              </a>
+{% elif role == "teacher" %}
+    <h4 class="mt-4"><i class="fas fa-chalkboard-teacher me-2"></i> Your Assigned Classes</h4>
+    <hr>
+    {% if class_subjects %}
+      <div class="row">
+        {% for cs in class_subjects %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-secondary">
+              <div class="card-body">
+                <h5 class="card-title text-primary">{{ cs.subject.name }}</h5>
+                <p class="card-text">Class: **{{ cs.school_class.name }}**</p>
+                <p class="card-text"><small class="text-muted">Academic Year: {{ cs.academic_year }}</small></p>
+                <a href="{% url 'progress:teacher_class_subject' cs.id %}" class="btn btn-sm btn-primary w-100 mt-2">
+                  Manage Content <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p>No classes assigned yet.</p>
-  {% endif %}
-
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info"><i class="fas fa-info-circle me-2"></i> No classes assigned yet.</div>
+{% endif %}
 {% elif role == "student" %}
-  <div class="mb-3">
-    <a href="{% url 'accounts:student_subjects' %}" class="btn btn-primary me-2">My Subjects</a>
-    <a href="{% url 'accounts:student_grades' %}" class="btn btn-outline-secondary">My Grades</a>
-  </div>
+    <h4 class="mt-4"><i class="fas fa-user-graduate me-2"></i> Student Panel</h4>
+    <hr>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <a href="{% url 'accounts:student_subjects' %}" class="card-link-item">
+          <div class="card text-center text-white bg-primary h-100 shadow-sm">
+            <div class="card-body">
+              <i class="fas fa-book-open fa-3x mb-2"></i>
+              <h5 class="card-title mt-2">My Subjects</h5>
+              <p class="card-text">View all your registered classes.</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-3">
+        <a href="{% url 'accounts:student_grades' %}" class="card-link-item">
+          <div class="card text-center text-white bg-success h-100 shadow-sm">
+            <div class="card-body">
+              <i class="fas fa-award fa-3x mb-2"></i>
+              <h5 class="card-title mt-2">My Grades</h5>
+              <p class="card-text">Check your homework and quiz scores.</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
 
 {% elif role == "parent" %}
-  <h4>Your Children</h4>
-  {% if parent_children %}\
-    <ul class="list-group">\
-      {% for rel in parent_children %}\
-        <li class="list-group-item d-flex justify-content-between align-items-center">\
-          {{ rel.student.profile.full_name }} ({{ rel.student.username }})\
-          <a href="{% url 'accounts:parent_child_grades' rel.student.id %}" class="btn btn-sm btn-info">View Grades</a>\
-        </li>\
-      {% endfor %}\
-    </ul>\
-  {% else %}\
-    <p>No children linked yet.</p>\
-  {% endif %}\
-{% endif %}
-{% endblock %}
+    <h4 class="mt-4"><i class="fas fa-users-class me-2"></i> Your Children</h4>
+    <hr>
+    {% if parent_children %}
+      <ul class="list-group shadow-sm">
+        {% for rel in parent_children %}
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <span class="fw-bold"><i class="fas fa-child me-2 text-info"></i> {{ rel.student.profile.full_name }}</span>
+            <span class="text-muted small">Username: {{ rel.student.username }}</span>
+            <a href="{% url 'accounts:parent_child_grades' rel.student.id %}" class="btn btn-sm btn-info">
+              View Grades <i class="fas fa-external-link-alt ms-1"></i>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="alert alert-warning"><i class="fas fa-exclamation-triangle me-2"></i> No children linked to your account yet.</div>
+    {% endif %}
+
+{% endif %} {% endblock %}

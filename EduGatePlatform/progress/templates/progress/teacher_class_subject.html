@@ -1,41 +1,57 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h1>{{ classsubject.school_class.name }} - {{ classsubject.subject.name }}</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-chalkboard-teacher me-2"></i> Manage: {{ class_subject.subject.name }} ({{ class_subject.school_class.name }})</h1>
+    <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    </a>
+</div>
+<hr>
 
-<h2>Lessons</h2>
-<a href="{% url 'progress:lesson_create' classsubject.id %}">+ Add lesson</a>
-<ul>
-  {% for lesson in lessons %}
-    <li>{{ lesson.title }} - {{ lesson.created_at }}</li>
-  {% empty %}
-    <li>No lessons yet.</li>
-  {% endfor %}
-</ul>
-
-<h2>Homeworks</h2>
-<a href="{% url 'progress:homework_create' classsubject.id %}">+ Add homework</a>
-<ul>
-  {% for hw in homeworks %}
-    <li>
-      {{ hw.title }} - due: {{ hw.due_date }}
-      | <a href="{% url 'progress:homework_submissions' hw.id %}">View submissions</a>
-    </li>
-  {% empty %}
-    <li>No homeworks yet.</li>
-  {% endfor %}
-</ul>
-
-<h2>Quizzes</h2>
-<a href="{% url 'progress:quiz_create' classsubject.id %}">+ Add quiz</a>
-<ul>
-  {% for quiz in quizzes %}
-    <li>
-      {{ quiz.title }} - Marks: {{ quiz.total_marks }}
-      | <a href="{% url 'progress:quiz_submissions' quiz.id %}">View submissions</a>
-    </li>
-  {% empty %}
-    <li>No quizzes yet.</li>
-  {% endfor %}
-</ul>
-{%endblock%}
+<div class="card shadow-lg">
+    <div class="card-header p-0">
+        <ul class="nav nav-tabs" id="contentTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="lessons-tab" data-bs-toggle="tab" data-bs-target="#lessons" type="button" role="tab" aria-controls="lessons" aria-selected="true">
+                    <i class="fas fa-book me-2"></i> Lessons ({{ lessons|length }})
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="homework-tab" data-bs-toggle="tab" data-bs-target="#homework" type="button" role="tab" aria-controls="homework" aria-selected="false">
+                    <i class="fas fa-pencil-alt me-2"></i> Homework ({{ homeworks|length }})
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quizzes-tab" data-bs-toggle="tab" data-bs-target="#quizzes" type="button" role="tab" aria-controls="quizzes" aria-selected="false">
+                    <i class="fas fa-question me-2"></i> Quizzes ({{ quizzes|length }})
+                </button>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="card-body">
+        <div class="tab-content" id="contentTabsContent">
+            
+            <div class="tab-pane fade show active" id="lessons" role="tabpanel" aria-labelledby="lessons-tab">
+                <a href="{% url 'progress:lesson_create' class_subject.id %}" class="btn btn-sm btn-success mb-3">
+                    <i class="fas fa-plus-circle me-1"></i> Add New Lesson
+                </a>
+                <ul class="list-group shadow-sm">
+                    {% for lesson in lessons %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-bold"><i class="fas fa-feather-alt me-2 text-info"></i> {{ lesson.title }}</span>
+                            <div>
+                                <a href="{% url 'progress:lesson_update' lesson.id %}" class="btn btn-sm btn-info me-2"><i class="fas fa-edit"></i> Edit</a>
+                                <a href="{% url 'progress:lesson_delete' lesson.id %}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <div class="alert alert-light text-center">No lessons added yet.</div>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            </div>
+    </div>
+</div>
+{% endblock %}

@@ -58,3 +58,39 @@ body {
     background: #e5e7eb;
     font-size: 14px;
 }
+
+/* static/css/style.css */
+body {
+    background-color: #f8f9fa; /* لون فاتح جداً للخلفية */
+    min-height: 100vh;
+}
+.navbar {
+    border-bottom: 4px solid #007bff; /* شريط سفلي أزرق */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+h1, h2, h3 {
+    color: #343a40;
+    font-weight: 600;
+}
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* ظل أكثر وضوحاً */
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-3px);
+}
+
+/* For role-based links on the Dashboard */
+.card-link-item {
+    text-decoration: none;
+}
+.card-link-item .card {
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+.card-link-item:hover .card {
+    border-color: #007bff;
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.2);
+}
