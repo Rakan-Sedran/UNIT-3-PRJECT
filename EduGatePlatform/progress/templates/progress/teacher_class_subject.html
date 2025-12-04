@@ -33,8 +33,7 @@
         <div class="tab-content" id="contentTabsContent">
             
             <div class="tab-pane fade show active" id="lessons" role="tabpanel" aria-labelledby="lessons-tab">
-                <a href="{% url 'progress:lesson_create' class_subject.id %}" class="btn btn-sm btn-success mb-3">
-                    <i class="fas fa-plus-circle me-1"></i> Add New Lesson
+<a href="{% url 'progress:lesson_create' classsubject.id %}" class="btn btn-sm btn-success mb-3">                    <i class="fas fa-plus-circle me-1"></i> Add New Lesson
                 </a>
                 <ul class="list-group shadow-sm">
                     {% for lesson in lessons %}
