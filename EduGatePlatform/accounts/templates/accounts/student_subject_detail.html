@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1><i class="fas fa-book me-2"></i> {{ class_subject.subject.name }} ({{ class_subject.school_class.name }})</h1>
+<h1><i class="fas fa-book me-2"></i> {{ classsubject.subject.name }} ({{ classsubject.school_class.name }})</h1>
 <hr>
 
 <div class="card shadow-lg">
@@ -33,8 +33,12 @@
                     <ul class="list-group">
                         {% for lesson in lessons %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span class="fw-bold"><i class="fas fa-file-alt me-2 text-primary"></i> {{ lesson.title }}</span>
-                                <span class="badge bg-secondary">Published: {{ lesson.created_at|date:"M d" }}</span>
+                                <span class="fw-bold">
+                                    <i class="fas fa-file-alt me-2 text-primary"></i> {{ lesson.title }}
+                                </span>
+                                <span class="badge bg-secondary">
+                                    Published: {{ lesson.created_at|date:"M d" }}
+                                </span>
                             </li>
                         {% endfor %}
                     </ul>
@@ -45,14 +49,17 @@
             
             <div class="tab-pane fade" id="homework" role="tabpanel" aria-labelledby="homework-tab">
                 <h5>Assignments (Homework)</h5>
-                {% comment %} مثال لكيفية عرض الواجبات مع زر للتسليم {% endcomment %}
                 {% if homeworks %}
                     <ul class="list-group">
                         {% for hw in homeworks %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <span class="fw-bold"><i class="fas fa-clipboard-list me-2 text-warning"></i> {{ hw.title }}</span>
-                                    <small class="text-muted ms-3">Due: {{ hw.due_date|date:"M d, H:i" }}</small>
+                                    <span class="fw-bold">
+                                        <i class="fas fa-clipboard-list me-2 text-warning"></i> {{ hw.title }}
+                                    </span>
+                                    <small class="text-muted ms-3">
+                                        Due: {{ hw.due_date|date:"M d, H:i" }}
+                                    </small>
                                 </div>
                                 <a href="{% url 'progress:homework_submit' hw.id %}" class="btn btn-sm btn-outline-warning">
                                     <i class="fas fa-upload me-1"></i> Submit
@@ -67,8 +74,30 @@
             
             <div class="tab-pane fade" id="quizzes" role="tabpanel" aria-labelledby="quizzes-tab">
                 <h5>Quizzes</h5>
-                </div>
-            
+
+                {% if quizzes %}
+                    <ul class="list-group mt-3">
+                        {% for quiz in quizzes %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ quiz.title }}</strong><br>
+                                    <small class="text-muted">
+                                        Total Marks: {{ quiz.total_marks }}
+                                    </small>
+                                </div>
+                                <a href="{% url 'progress:start_quiz' quiz.id %}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-pen me-1"></i> Start Quiz
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="alert alert-light mt-3">
+                        No quizzes assigned yet.
+                    </div>
+                {% endif %}
+            </div>
+
         </div>
     </div>
 </div>

@@ -230,6 +230,7 @@ def quiz_delete(request, quiz_id):
 def student_subject_detail(request, classsubject_id):
     classsubject = get_object_or_404(ClassSubject, id=classsubject_id)
 
+    # تأكد إن الطالب مسجل في نفس الكلاس
     is_enrolled = StudentClassEnrollment.objects.filter(
         student=request.user,
         school_class=classsubject.school_class
@@ -239,40 +240,18 @@ def student_subject_detail(request, classsubject_id):
         messages.error(request, "You are not enrolled in this class.")
         return HttpResponseForbidden("Not allowed")
 
+    # الدروس + الواجبات + الكويزات
     lessons = Lesson.objects.filter(class_subject=classsubject)
     homeworks = Homework.objects.filter(class_subject=classsubject)
     quizzes = Quiz.objects.filter(class_subject=classsubject)
 
-    attempts = QuizAttempt.objects.filter(
-        student=request.user,
-        quiz__in=quizzes
-    ).order_by('quiz', '-started_at')
-
-    quiz_data = []
-    used_quiz_ids = set()
-
-    for att in attempts:
-        if att.quiz_id not in used_quiz_ids:
-            used_quiz_ids.add(att.quiz_id)
-            quiz_data.append({
-                "quiz": att.quiz,
-                "latest_attempt": att,
-            })
-
-    for quiz in quizzes:
-        if quiz.id not in used_quiz_ids:
-            quiz_data.append({
-                "quiz": quiz,
-                "latest_attempt": None,
-            })
-
-    return render(request, "progress/student_subject_detail.html", {
-        "classsubject": classsubject,
+    # ⚠️ هنا أهم شي: نستخدم تيمبلت accounts اللي انت عدلته
+    return render(request, "accounts/student_subject_detail.html", {
+        "class_subject": classsubject,  # نفس الاسم اللي في التيمبلت حقك
         "lessons": lessons,
         "homeworks": homeworks,
-        "quiz_data": quiz_data,   
+        "quizzes": quizzes,
     })
-
 
 @login_required
 def homework_submit(request, homework_id):
@@ -575,9 +554,9 @@ def take_quiz_attempt(request, attempt_id):
         attempt.finished_at = timezone.now()
         attempt.save()
 
-        return redirect("progress:quiz_attempt_result", attempt_id=attempt.id)
+        return redirect("progress:quiz_attempt", attempt_id=attempt.id)
 
-    return render(request, "progress/take_quiz_attempt.html", {
+    return render(request, "progress/take_quiz.html", {
         "quiz": quiz,
         "attempt": attempt,
         "deadline": deadline,
@@ -586,14 +565,10 @@ def take_quiz_attempt(request, attempt_id):
 
 @login_required
 def quiz_attempt_result(request, attempt_id):
-    """
-    عرض نتيجة محاولة كويز لنظام الأسئلة/الاختيارات.
-    """
+
     attempt = get_object_or_404(QuizAttempt, id=attempt_id, student=request.user)
 
-    return render(request, "progress/quiz_attempt_result.html", {
-        "attempt": attempt,
-    })
+    return render(request, "progress/attempt_result.html", {"attempt": attempt,})
 
 
 @login_required
